@@ -86,13 +86,13 @@ const MealPlanScreen = () => {
   const [suggestedRecipes, setSuggestedRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-   const addToGroceryList = (recipeIngredients) => {
-     // Navigate to GroceryList tab and pass the ingredients
-     navigation.navigate("GroceryList", {
-       screen: "GroceryListMain",
-       params: { newItems: recipeIngredients },
-     });
-   };
+  const addToGroceryList = (recipeIngredients) => {
+    // Navigate to GroceryList tab and pass the ingredients
+    navigation.navigate("GroceryList", {
+      screen: "GroceryListMain",
+      params: { newItems: recipeIngredients },
+    });
+  };
   const addIngredient = () => {
     if (ingredients.trim()) {
       setIngredientList([...ingredientList, ingredients.trim()]);
@@ -121,7 +121,7 @@ const MealPlanScreen = () => {
   };
 
   const generateMockRecipes = (ingredients) => {
-    return [
+    const allRecipes = [
       {
         id: "1",
         name: "Vegetable Stir Fry",
@@ -162,16 +162,146 @@ const MealPlanScreen = () => {
         cookingTime: "30 minutes",
         difficulty: "Medium",
       },
+      {
+        id: "3",
+        name: "Pasta Primavera",
+        description: `Fresh pasta dish featuring ${ingredients.join(", ")}.`,
+        ingredients: [
+          ...ingredients,
+          "pasta",
+          "olive oil",
+          "garlic",
+          "parmesan cheese",
+        ],
+        steps: [
+          "1. Cook pasta according to package instructions",
+          "2. While pasta cooks, heat olive oil in a large pan",
+          "3. Sauté garlic for 1 minute until fragrant",
+          "4. Add vegetables and cook until tender",
+          "5. Drain pasta, reserving 1/2 cup pasta water",
+          "6. Toss pasta with vegetables, adding pasta water as needed",
+          "7. Top with grated parmesan before serving",
+        ],
+        cookingTime: "20 minutes",
+        difficulty: "Easy",
+      },
+      {
+        id: "4",
+        name: "Omelette",
+        description: `Fluffy omelette with ${ingredients.join(", ")}.`,
+        ingredients: [...ingredients, "eggs", "butter", "salt", "pepper"],
+        steps: [
+          "1. Beat 2-3 eggs with a pinch of salt and pepper",
+          "2. Melt butter in a non-stick pan over medium heat",
+          "3. Pour in eggs and let set for 30 seconds",
+          "4. Add vegetables to one half of the omelette",
+          "5. When eggs are nearly set, fold omelette in half",
+          "6. Cook for another 30 seconds, then slide onto plate",
+        ],
+        cookingTime: "10 minutes",
+        difficulty: "Easy",
+      },
+      {
+        id: "5",
+        name: "Roasted Vegetables",
+        description: `Oven-roasted ${ingredients.join(", ")} with herbs.`,
+        ingredients: [
+          ...ingredients,
+          "olive oil",
+          "salt",
+          "pepper",
+          "dried herbs",
+        ],
+        steps: [
+          "1. Preheat oven to 400°F (200°C)",
+          "2. Chop vegetables into even-sized pieces",
+          "3. Toss with olive oil, salt, pepper, and herbs",
+          "4. Spread in single layer on baking sheet",
+          "5. Roast for 25-30 minutes, stirring halfway",
+          "6. Serve as side dish or over grains",
+        ],
+        cookingTime: "35 minutes",
+        difficulty: "Easy",
+      },
+      {
+        id: "6",
+        name: "Grain Bowl",
+        description: `Healthy grain bowl with ${ingredients.join(", ")}.`,
+        ingredients: [
+          ...ingredients,
+          "quinoa or rice",
+          "lemon juice",
+          "olive oil",
+          "feta cheese",
+        ],
+        steps: [
+          "1. Cook grains according to package instructions",
+          "2. Prepare vegetables (raw or lightly cooked)",
+          "3. Make dressing with lemon juice, olive oil, salt and pepper",
+          "4. Assemble bowl with grains, vegetables, and dressing",
+          "5. Top with crumbled feta cheese",
+          "6. Add nuts or seeds for extra crunch if desired",
+        ],
+        cookingTime: "25 minutes",
+        difficulty: "Easy",
+      },
+      {
+        id: "7",
+        name: "Vegetable Curry",
+        description: `Flavorful curry with ${ingredients.join(", ")}.`,
+        ingredients: [
+          ...ingredients,
+          "coconut milk",
+          "curry paste",
+          "onion",
+          "garlic",
+        ],
+        steps: [
+          "1. Sauté chopped onion and garlic in oil until soft",
+          "2. Add curry paste and cook for 1 minute",
+          "3. Add vegetables and stir to coat with paste",
+          "4. Pour in coconut milk and bring to simmer",
+          "5. Cook for 15-20 minutes until vegetables are tender",
+          "6. Serve with rice or naan bread",
+        ],
+        cookingTime: "30 minutes",
+        difficulty: "Medium",
+      },
+      {
+        id: "8",
+        name: "Frittata",
+        description: `Italian-style egg dish with ${ingredients.join(", ")}.`,
+        ingredients: [
+          ...ingredients,
+          "eggs",
+          "milk",
+          "cheese",
+          "salt",
+          "pepper",
+        ],
+        steps: [
+          "1. Preheat oven to 350°F (175°C)",
+          "2. Sauté vegetables in oven-safe pan",
+          "3. Whisk eggs with milk, salt and pepper",
+          "4. Pour egg mixture over vegetables",
+          "5. Cook on stovetop until edges set (5 minutes)",
+          "6. Sprinkle with cheese and bake for 15 minutes",
+          "7. Let cool slightly before slicing",
+        ],
+        cookingTime: "30 minutes",
+        difficulty: "Medium",
+      },
     ];
-  };
 
+    // Return 4 random recipes from the collection
+    return allRecipes.sort(() => 0.5 - Math.random()).slice(0, 3);
+  };
   // Update your recipe card rendering to show steps when pressed
   const [expandedRecipe, setExpandedRecipe] = useState(null);
 
   const toggleRecipeExpansion = (recipeId) => {
     setExpandedRecipe(expandedRecipe === recipeId ? null : recipeId);
   };
-
 
   return (
     <ScrollView style={styles.screenContainer}>
@@ -280,21 +410,21 @@ const GroceryListScreen = ({ route }) => {
   const [calculatorValue, setCalculatorValue] = useState("0");
   const [calculatorActive, setCalculatorActive] = useState(false);
 
-   useEffect(() => {
-     if (route.params?.newItems) {
-       // Process the new items
-       const itemsToAdd = route.params.newItems.filter(
-         (item) => !groceryItems.some((gItem) => gItem.name === item)
-       );
+  useEffect(() => {
+    if (route.params?.newItems) {
+      // Process the new items
+      const itemsToAdd = route.params.newItems.filter(
+        (item) => !groceryItems.some((gItem) => gItem.name === item)
+      );
 
-       if (itemsToAdd.length > 0) {
-         setGroceryItems((prev) => [
-           ...prev,
-           ...itemsToAdd.map((item) => ({ name: item, quantity: 1 })),
-         ]);
-       }
-     }
-   }, [route.params]);
+      if (itemsToAdd.length > 0) {
+        setGroceryItems((prev) => [
+          ...prev,
+          ...itemsToAdd.map((item) => ({ name: item, quantity: 1 })),
+        ]);
+      }
+    }
+  }, [route.params]);
 
   const addGroceryItem = () => {
     if (newItem.trim()) {
@@ -464,192 +594,267 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
+    backgroundColor: "#e8383b",
+    padding: 22,
   },
   content: {
     alignItems: "center",
+    width: "100%",
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    color: "#333",
-    marginBottom: 15,
+    color: "#2C3E50",
+    marginBottom: 20,
     textAlign: "center",
+    letterSpacing: 0.5,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "600",
-    color: "#444",
-    marginBottom: 15,
+    color: "#34495E",
+    marginBottom: 16,
     textAlign: "center",
   },
   inputSection: {
     width: "100%",
-    marginBottom: 30,
+    marginBottom: 32,
+    backgroundColor: "#F8F9FA",
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   inputContainer: {
     flexDirection: "row",
-    marginBottom: 15,
+    marginBottom: 16,
+    alignItems: "center",
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    marginRight: 10,
+    borderColor: "#E0E0E0",
+    borderRadius: 10,
+    padding: 14,
+    marginRight: 12,
     fontSize: 16,
+    backgroundColor: "#FFFFFF",
   },
   addButton: {
     backgroundColor: "#4CAF50",
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 10,
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   addButtonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
   },
   ingredientsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     marginBottom: 20,
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   ingredientItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#E8F5E9",
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     borderRadius: 20,
     margin: 5,
+    borderWidth: 1,
+    borderColor: "#C8E6C9",
   },
   ingredientText: {
-    marginRight: 5,
+    marginRight: 8,
+    fontSize: 15,
+    color: "#2E7D32",
   },
   removeText: {
-    color: "#ff4444",
+    color: "#E53935",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
+    paddingHorizontal: 4,
   },
   suggestButton: {
     backgroundColor: "#FF9800",
-    padding: 15,
-    borderRadius: 8,
+    padding: 16,
+    borderRadius: 10,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
   },
   disabledButton: {
-    backgroundColor: "#cccccc",
+    backgroundColor: "#BDBDBD",
+    shadowOpacity: 0.1,
   },
   suggestButtonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
   },
   recipesSection: {
     width: "100%",
     marginBottom: 30,
   },
   recipeCard: {
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+    padding: 18,
+    borderRadius: 12,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: "#EEEEEE",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   recipeName: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 5,
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#303F9F",
+    marginBottom: 8,
   },
   recipeDescription: {
-    fontSize: 14,
-    color: "#666",
+    fontSize: 15,
+    color: "#546E7A",
+    lineHeight: 22,
+    marginBottom: 6,
   },
   recipeIngredients: {
-    fontSize: 12,
-    color: "#888",
-    marginTop: 5,
+    fontSize: 14,
+    color: "#607D8B",
+    marginTop: 6,
     fontStyle: "italic",
+    lineHeight: 20,
   },
   profileSection: {
-    marginTop: 30,
+    marginTop: 34,
     alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    padding: 20,
+    borderRadius: 12,
+    width: "100%",
   },
   profileText: {
-    fontSize: 16,
-    marginBottom: 20,
+    fontSize: 17,
+    marginBottom: 24,
+    color: "#424242",
   },
   logoutButton: {
-    backgroundColor: "#FF6B6B",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
+    backgroundColor: "#F44336",
+    paddingHorizontal: 22,
+    paddingVertical: 14,
+    borderRadius: 10,
     width: "100%",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4,
   },
   logoutButtonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
   },
   groceryItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+    borderRadius: 10,
     marginBottom: 10,
     justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "#EEEEEE",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   groceryItemText: {
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: 12,
     fontSize: 16,
+    color: "#37474F",
   },
   quantityControls: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    borderRadius: 8,
+    paddingHorizontal: 4,
   },
   quantityButton: {
     fontSize: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     color: "#FF6B6B",
+    fontWeight: "bold",
   },
   quantityText: {
     fontSize: 16,
-    width: 30,
+    width: 32,
     textAlign: "center",
+    fontWeight: "500",
   },
   calculatorToggle: {
     backgroundColor: "#FF9800",
-    padding: 10,
-    borderRadius: 8,
+    padding: 12,
+    borderRadius: 10,
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   calculatorToggleText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
   },
   calculatorContainer: {
-    marginVertical: 10,
+    marginVertical: 12,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
+    borderColor: "#E0E0E0",
+    borderRadius: 12,
     overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   calculatorDisplay: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
+    backgroundColor: "#ECEFF1",
+    padding: 18,
     alignItems: "flex-end",
   },
   calculatorDisplayText: {
-    fontSize: 24,
+    fontSize: 28,
+    fontWeight: "500",
+    color: "#263238",
   },
   calculatorButtons: {
     flexDirection: "row",
@@ -657,51 +862,66 @@ const styles = StyleSheet.create({
   },
   calculatorButton: {
     width: "25%",
-    padding: 15,
+    padding: 18,
     alignItems: "center",
-    backgroundColor: "#eee",
+    justifyContent: "center",
+    backgroundColor: "#F5F5F5",
     borderWidth: 0.5,
-    borderColor: "#ddd",
+    borderColor: "#E0E0E0",
+    height: 60,
   },
   calculatorButtonText: {
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#263238",
   },
   groceryList: {
-    marginTop: 10,
+    marginTop: 12,
+    width: "100%",
   },
   recipeMeta: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 3,
+    fontSize: 13,
+    color: "#78909C",
+    marginTop: 5,
+    marginBottom: 2,
   },
   recipeDetails: {
-    marginTop: 10,
-    paddingTop: 10,
+    marginTop: 12,
+    paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: "#EEEEEE",
   },
   sectionHeader: {
-    fontWeight: "bold",
-    marginTop: 8,
-    marginBottom: 4,
+    fontWeight: "700",
+    marginTop: 10,
+    marginBottom: 6,
+    fontSize: 15,
+    color: "#455A64",
   },
   stepText: {
-    marginLeft: 10,
-    marginBottom: 5,
+    marginLeft: 12,
+    marginBottom: 8,
     fontSize: 14,
-    color: "#444",
+    color: "#455A64",
+    lineHeight: 20,
   },
   addToListButton: {
     backgroundColor: "#4CAF50",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 14,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   addToListButtonText: {
     color: "white",
-    fontWeight: "bold",
-  }
+    fontWeight: "600",
+    fontSize: 15,
+  },
 });
 
 export default HomeTabs;
